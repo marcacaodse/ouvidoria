@@ -864,12 +864,9 @@
         }
 
         // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-            
-            // Atualização automática a cada 30 segundos
-            setInterval(loadData, 30000);
-        });
-    </script>
-</body>
-</html>
+document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+    
+    // Atualização automática a cada 60 segundos
+    setInterval(loadData, 60000);
+});
