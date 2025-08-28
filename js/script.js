@@ -340,5 +340,5 @@ function exportToExcel() {
 
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
-    setInterval(loadData, 30000);
+    setInterval(loadData, 180000);
 });
