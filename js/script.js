@@ -228,8 +228,11 @@ function updateStatusChart() {
                 legend: { position: 'bottom' }, 
                 datalabels: { 
                     color: '#fff', 
-                    font: { weight: 'bold' }, 
-                    formatter: (value) => value > 0 ? value : '' // Mostra o valor apenas se for maior que 0
+                    font: { 
+                        weight: 'bold',
+                        size: 14 // Tamanho da fonte aumentado
+                    }, 
+                    formatter: (value) => value > 0 ? value : ''
                 } 
             } 
         }
@@ -255,7 +258,10 @@ function updateUBSChart() {
                 legend: { display: false },
                 datalabels: {
                     color: '#fff',
-                    font: { weight: 'bold' },
+                    font: { 
+                        weight: 'bold',
+                        size: 14 // Tamanho da fonte aumentado
+                    },
                     anchor: 'center',
                     align: 'center'
                 }
@@ -286,7 +292,10 @@ function updateMotivoChart() {
                 legend: { display: false }, 
                 datalabels: { 
                     color: '#fff', 
-                    font: { weight: 'bold' } 
+                    font: { 
+                        weight: 'bold',
+                        size: 14 // Tamanho da fonte aumentado
+                    } 
                 } 
             }, 
             scales: { y: { beginAtZero: true } } 
@@ -311,7 +320,7 @@ function updateTimeChart() {
             maintainAspectRatio: false, 
             plugins: { 
                 legend: { display: false },
-                datalabels: { display: false } // Desabilitado para o gráfico de linha para não poluir
+                datalabels: { display: false }
             }, 
             scales: { 
                 y: { beginAtZero: true }, 
@@ -341,7 +350,10 @@ function updateUBSRespondidasChart() {
                 legend: { display: false }, 
                 datalabels: { 
                     color: '#fff', 
-                    font: { weight: 'bold' } 
+                    font: { 
+                        weight: 'bold',
+                        size: 14 // Tamanho da fonte aumentado
+                    } 
                 } 
             }, 
             scales: { x: { beginAtZero: true } } 
@@ -369,7 +381,10 @@ function updateUBSPendentesChart() {
                 legend: { display: false }, 
                 datalabels: { 
                     color: '#fff', 
-                    font: { weight: 'bold' } 
+                    font: { 
+                        weight: 'bold',
+                        size: 14 // Tamanho da fonte aumentado
+                    } 
                 } 
             }, 
             scales: { x: { beginAtZero: true } } 
