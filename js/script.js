@@ -144,8 +144,6 @@ function parseDate(dateStr) {
     return null;
 }
 
-Chart.register(ChartDataLabels);
-
 function updateDashboard() {
     updateKPIs();
     updateCharts();
@@ -220,7 +218,7 @@ function updateStatusChart() {
             labels: ['Respondidas', 'Pendentes'],
             datasets: [{ data: [respondidas, pendentes], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 2, borderColor: '#fff' }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { color: '#fff', font: { weight: 'bold' }, formatter: (value, context) => { const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0); return `${value}`; } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
     });
 }
 
@@ -236,7 +234,7 @@ function updateUBSChart() {
             labels: sortedUBS.map(item => item[0]),
             datasets: [{ label: 'Demandas', data: sortedUBS.map(item => item[1]), backgroundColor: '#2563eb', borderColor: '#1d4ed8', borderWidth: 1 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold' } } }, scales: { y: { beginAtZero: true }, x: { ticks: { maxRotation: 45 } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { maxRotation: 45 } } } }
     });
 }
 
@@ -251,7 +249,7 @@ function updateMotivoChart() {
             labels: Object.keys(motivoCount),
             datasets: [{ label: 'Demandas', data: Object.values(motivoCount), backgroundColor: ['#8b5cf6', '#06b6d4', '#10b981'], borderWidth: 1 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold' } } }, scales: { y: { beginAtZero: true } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
     });
 }
 
@@ -267,7 +265,7 @@ function updateTimeChart() {
             labels: sortedDates.map(item => item[0]),
             datasets: [{ label: 'Demandas por Data', data: sortedDates.map(item => item[1]), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.4, fill: true }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold' } } }, scales: { y: { beginAtZero: true }, x: { ticks: { maxRotation: 45 } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true }, x: { ticks: { maxRotation: 45 } } } }
     });
 }
 
@@ -283,7 +281,7 @@ function updateUBSRespondidasChart() {
             labels: sortedUBS.map(item => item[0]),
             datasets: [{ label: 'Respondidas', data: sortedUBS.map(item => item[1]), backgroundColor: '#10b981', borderColor: '#059669', borderWidth: 1 }]
         },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold' } } }, scales: { x: { beginAtZero: true } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
     });
 }
 
@@ -299,7 +297,7 @@ function updateUBSPendentesChart() {
             labels: sortedUBS.map(item => item[0]),
             datasets: [{ label: 'Pendentes', data: sortedUBS.map(item => item[1]), backgroundColor: '#ef4444', borderColor: '#dc2626', borderWidth: 1 }]
         },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold' } } }, scales: { x: { beginAtZero: true } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
     });
 }
 
