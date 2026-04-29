@@ -3,9 +3,17 @@ let filteredData = [];
 let charts = {};
 let dataTable;
 
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1IiHmkvOeJRIWbR80E74L9wVRPkUdEo1N/export?format=csv&gid=953483319';
+// NOVA PLANILHA (conforme solicitado)
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/185VQWj2yhEysTQYM5d9GpfzRRZuNppm0dx17qn6EWPo/export?format=csv&gid=953483319';
 
-async function loadData(  ) {
+// Estado dos filtros multi-select
+let filterSelections = {
+    status: [],
+    ubs: [],
+    motivo: []
+};
+
+async function loadData() {
     try {
         document.getElementById('connectionStatus').className = 'status-indicator status-online';
         document.getElementById('connectionText').textContent = 'Carregando...';
@@ -14,14 +22,13 @@ async function loadData(  ) {
         const csvText = await response.text();
         
         const lines = csvText.split('\n');
-        const headers = lines[0].split(',');
         
         allData = [];
-        for (let i = 2; i < lines.length; i++) { // Começar da linha 2 (após cabeçalho)
+        for (let i = 2; i < lines.length; i++) {
             const line = lines[i].trim();
             if (line) {
                 const values = parseCSVLine(line);
-                if (values.length >= 15 && values[0]) { // Verificar se tem dados válidos
+                if (values.length >= 15 && values[0]) {
                     allData.push({
                         nome: values[0] || '',
                         ubs: values[1] || '',
@@ -81,21 +88,84 @@ function parseCSVLine(line) {
 function updateFilters() {
     const ubsSet = new Set();
     const motivoSet = new Set();
+    const anoSet = new Set();
     
     allData.forEach(item => {
         if (item.ubs) ubsSet.add(item.ubs);
         if (item.motivo) motivoSet.add(item.motivo);
+        if (item.dataChegada) {
+            const ano = item.dataChegada.split('/')[2];
+            if (ano) anoSet.add(ano);
+        }
     });
     
-    updateSelectOptions('ubsFilter', Array.from(ubsSet).sort());
-    updateSelectOptions('motivoFilter', Array.from(motivoSet).sort());
+    updateMultiSelectOptions('ubsDropdown', Array.from(ubsSet).sort(), 'ubs');
+    updateMultiSelectOptions('motivoDropdown', Array.from(motivoSet).sort(), 'motivo');
+    updateSelectOptions('anoFilter', Array.from(anoSet).sort().reverse());
+}
+
+function updateMultiSelectOptions(containerId, options, filterType) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    options.forEach(option => {
+        const label = document.createElement('label');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = option;
+        checkbox.checked = filterSelections[filterType].includes(option);
+        checkbox.onchange = () => updateFilterSelection(filterType);
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(' ' + option));
+        container.appendChild(label);
+    });
+    
+    updateMultiSelectButtonText(filterType);
+}
+
+function updateMultiSelectButtonText(filterType) {
+    const selections = filterSelections[filterType];
+    const containerId = filterType + 'FilterContainer';
+    const btnSpan = document.querySelector(`#${containerId} .multi-select-btn span`);
+    
+    if (btnSpan) {
+        if (selections.length === 0 || selections.length === getTotalOptionsCount(filterType)) {
+            btnSpan.textContent = filterType === 'status' ? 'Todos' : (filterType === 'ubs' ? 'Todas' : 'Todos');
+        } else if (selections.length === 1) {
+            btnSpan.textContent = selections[0];
+        } else {
+            btnSpan.textContent = `${selections.length} selecionados`;
+        }
+    }
+}
+
+function getTotalOptionsCount(filterType) {
+    if (filterType === 'status') return 2;
+    const dropdown = document.getElementById(`${filterType}Dropdown`);
+    if (dropdown) return dropdown.querySelectorAll('input').length;
+    return 0;
+}
+
+function updateFilterSelection(filterType) {
+    const dropdown = document.getElementById(`${filterType}Dropdown`);
+    if (!dropdown) return;
+    
+    const checkboxes = dropdown.querySelectorAll('input');
+    filterSelections[filterType] = Array.from(checkboxes)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+    
+    updateMultiSelectButtonText(filterType);
+    applyFilters();
 }
 
 function updateSelectOptions(selectId, options) {
     const select = document.getElementById(selectId);
-    const currentValue = select.value;
+    if (!select) return;
     
-    select.innerHTML = select.children[0].outerHTML;
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">Todos</option>';
     
     options.forEach(option => {
         const optionElement = document.createElement('option');
@@ -109,24 +179,73 @@ function updateSelectOptions(selectId, options) {
     }
 }
 
+function toggleDropdown(dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+        dropdown.classList.toggle('show');
+    }
+}
+
+function clearAllFilters() {
+    // Limpar seleções dos checkboxes
+    filterSelections = {
+        status: [],
+        ubs: [],
+        motivo: []
+    };
+    
+    // Atualizar visual dos checkboxes
+    ['statusDropdown', 'ubsDropdown', 'motivoDropdown'].forEach(dropdownId => {
+        const dropdown = document.getElementById(dropdownId);
+        if (dropdown) {
+            const checkboxes = dropdown.querySelectorAll('input');
+            checkboxes.forEach(cb => cb.checked = false);
+        }
+    });
+    
+    // Limpar textos dos botões
+    updateMultiSelectButtonText('status');
+    updateMultiSelectButtonText('ubs');
+    updateMultiSelectButtonText('motivo');
+    
+    // Limpar selects de data e ano
+    document.getElementById('dataInicioFilter').value = '';
+    document.getElementById('dataFimFilter').value = '';
+    const anoFilter = document.getElementById('anoFilter');
+    if (anoFilter) anoFilter.value = '';
+    
+    // Aplicar filtros (reseta para todos os dados)
+    applyFilters();
+}
+
 function applyFilters() {
-    const statusFilter = document.getElementById('statusFilter').value;
-    const ubsFilter = document.getElementById('ubsFilter').value;
-    const motivoFilter = document.getElementById('motivoFilter').value;
     const dataInicio = document.getElementById('dataInicioFilter').value;
     const dataFim = document.getElementById('dataFimFilter').value;
+    const ano = document.getElementById('anoFilter').value;
     
     filteredData = allData.filter(item => {
-        if (statusFilter && item.status !== statusFilter) return false;
-        if (ubsFilter && item.ubs !== ubsFilter) return false;
-        if (motivoFilter && item.motivo !== motivoFilter) return false;
+        // Filtro Status (multi-select)
+        if (filterSelections.status.length > 0 && !filterSelections.status.includes(item.status)) return false;
         
+        // Filtro UBS (multi-select)
+        if (filterSelections.ubs.length > 0 && !filterSelections.ubs.includes(item.ubs)) return false;
+        
+        // Filtro Motivo (multi-select)
+        if (filterSelections.motivo.length > 0 && !filterSelections.motivo.includes(item.motivo)) return false;
+        
+        // Filtro por período
         if (dataInicio || dataFim) {
             const itemDate = parseDate(item.dataChegada);
             if (itemDate) {
                 if (dataInicio && itemDate < new Date(dataInicio)) return false;
                 if (dataFim && itemDate > new Date(dataFim)) return false;
             }
+        }
+        
+        // Filtro por ano
+        if (ano && item.dataChegada) {
+            const itemAno = item.dataChegada.split('/')[2];
+            if (itemAno !== ano) return false;
         }
         
         return true;
@@ -143,9 +262,6 @@ function parseDate(dateStr) {
     }
     return null;
 }
-
-// Registra o plugin globalmente para todos os gráficos
-Chart.register(ChartDataLabels);
 
 function updateDashboard() {
     updateKPIs();
@@ -210,6 +326,7 @@ function updateCharts() {
     updateUBSPendentesChart();
 }
 
+// GRÁFICOS SEM LINHAS DE GRADE (grid lines removidas)
 function updateStatusChart() {
     const respondidas = filteredData.filter(item => item.status === 'RESPONDIDA').length;
     const pendentes = filteredData.filter(item => item.status === 'PENDENTE').length;
@@ -226,14 +343,7 @@ function updateStatusChart() {
             maintainAspectRatio: false, 
             plugins: { 
                 legend: { position: 'bottom' }, 
-                datalabels: { 
-                    color: '#fff', 
-                    font: { 
-                        weight: 'bold',
-                        size: 14 // Tamanho da fonte aumentado
-                    }, 
-                    formatter: (value) => value > 0 ? value : ''
-                } 
+                datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value) => value > 0 ? value : '' }
             } 
         }
     });
@@ -254,21 +364,10 @@ function updateUBSChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false },
-                datalabels: {
-                    color: '#fff',
-                    font: { 
-                        weight: 'bold',
-                        size: 14 // Tamanho da fonte aumentado
-                    },
-                    anchor: 'center',
-                    align: 'center'
-                }
-            }, 
+            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, anchor: 'center', align: 'center' } }, 
             scales: { 
-                y: { beginAtZero: true }, 
-                x: { ticks: { maxRotation: 45 } } 
+                y: { beginAtZero: true, grid: { display: false } }, 
+                x: { ticks: { maxRotation: 45 }, grid: { display: false } } 
             } 
         }
     });
@@ -288,17 +387,8 @@ function updateMotivoChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false }, 
-                datalabels: { 
-                    color: '#fff', 
-                    font: { 
-                        weight: 'bold',
-                        size: 14 // Tamanho da fonte aumentado
-                    } 
-                } 
-            }, 
-            scales: { y: { beginAtZero: true } } 
+            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
+            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } 
         }
     });
 }
@@ -318,13 +408,10 @@ function updateTimeChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false },
-                datalabels: { display: false }
-            }, 
+            plugins: { legend: { display: false }, datalabels: { display: false } }, 
             scales: { 
-                y: { beginAtZero: true }, 
-                x: { ticks: { maxRotation: 45 } } 
+                y: { beginAtZero: true, grid: { display: false } }, 
+                x: { ticks: { maxRotation: 45 }, grid: { display: false } } 
             } 
         }
     });
@@ -346,17 +433,8 @@ function updateUBSRespondidasChart() {
             indexAxis: 'y', 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false }, 
-                datalabels: { 
-                    color: '#fff', 
-                    font: { 
-                        weight: 'bold',
-                        size: 14 // Tamanho da fonte aumentado
-                    } 
-                } 
-            }, 
-            scales: { x: { beginAtZero: true } } 
+            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
+            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } 
         }
     });
 }
@@ -377,23 +455,15 @@ function updateUBSPendentesChart() {
             indexAxis: 'y', 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { 
-                legend: { display: false }, 
-                datalabels: { 
-                    color: '#fff', 
-                    font: { 
-                        weight: 'bold',
-                        size: 14 // Tamanho da fonte aumentado
-                    } 
-                } 
-            }, 
-            scales: { x: { beginAtZero: true } } 
+            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
+            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } 
         }
     });
 }
 
 function updateTable() {
     if (dataTable) dataTable.destroy();
+    
     const tableBody = document.querySelector('#demandasTable tbody');
     tableBody.innerHTML = filteredData.map(item => `
         <tr>
@@ -406,9 +476,11 @@ function updateTable() {
             <td>${item.observacao}</td>
         </tr>
     `).join('');
+    
     dataTable = $('#demandasTable').DataTable({
         language: { url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json' },
         pageLength: 15,
+        lengthMenu: [[15, 30, 50, 100, 500, 1000], [15, 30, 50, 100, 500, 1000]],
         responsive: true,
         order: [[3, 'desc']]
     });
@@ -424,11 +496,22 @@ function exportToExcel() {
         'Data da Resposta': item.dataResposta,
         'Observação': item.observacao
     })));
+    
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Demandas');
     XLSX.writeFile(wb, `ouvidoria_eldorado_${new Date().toISOString().split('T')[0]}.xlsx`);
 }
 
+// Fechar dropdowns ao clicar fora
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.multi-select-container')) {
+        document.querySelectorAll('.multi-select-dropdown').forEach(dropdown => {
+            dropdown.classList.remove('show');
+        });
+    }
+});
+
+// Inicialização
 document.addEventListener('DOMContentLoaded', function() {
     loadData();
     setInterval(loadData, 180000);
