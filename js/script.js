@@ -3,7 +3,7 @@ let filteredData = [];
 let charts = {};
 let dataTable;
 
-// 
+// NOVA PLANILHA (conforme solicitado)
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1IiHmkvOeJRIWbR80E74L9wVRPkUdEo1N/export?format=csv&gid=953483319';
 
 // Estado dos filtros multi-select
@@ -326,7 +326,6 @@ function updateCharts() {
     updateUBSPendentesChart();
 }
 
-// GRÁFICOS SEM LINHAS DE GRADE (grid lines removidas)
 function updateStatusChart() {
     const respondidas = filteredData.filter(item => item.status === 'RESPONDIDA').length;
     const pendentes = filteredData.filter(item => item.status === 'PENDENTE').length;
@@ -343,7 +342,13 @@ function updateStatusChart() {
             maintainAspectRatio: false, 
             plugins: { 
                 legend: { position: 'bottom' }, 
-                datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, formatter: (value) => value > 0 ? value : '' }
+                datalabels: { 
+                    color: 'white', 
+                    font: { weight: 'bold', size: 14 }, 
+                    formatter: (value) => value > 0 ? value : '',
+                    anchor: 'center',
+                    align: 'center'
+                } 
             } 
         }
     });
@@ -364,7 +369,15 @@ function updateUBSChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 }, anchor: 'center', align: 'center' } }, 
+            plugins: { 
+                legend: { display: false }, 
+                datalabels: { 
+                    color: 'white', 
+                    font: { weight: 'bold', size: 14 }, 
+                    anchor: 'center', 
+                    align: 'center' 
+                } 
+            }, 
             scales: { 
                 y: { beginAtZero: true, grid: { display: false } }, 
                 x: { ticks: { maxRotation: 45 }, grid: { display: false } } 
@@ -382,13 +395,24 @@ function updateMotivoChart() {
         type: 'bar',
         data: {
             labels: Object.keys(motivoCount),
-            datasets: [{ label: 'Demandas', data: Object.values(motivoCount), backgroundColor: ['#8b5cf6', '#06b6d4', '#10b981'], borderWidth: 1 }]
+            datasets: [{ label: 'Demandas', data: Object.values(motivoCount), backgroundColor: '#8b5cf6', borderColor: '#6d28d9', borderWidth: 1 }]
         },
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
-            scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } } 
+            plugins: { 
+                legend: { display: false }, 
+                datalabels: { 
+                    color: 'white', 
+                    font: { weight: 'bold', size: 14 }, 
+                    anchor: 'center', 
+                    align: 'center' 
+                } 
+            }, 
+            scales: { 
+                y: { beginAtZero: true, grid: { display: false } }, 
+                x: { grid: { display: false } } 
+            } 
         }
     });
 }
@@ -408,7 +432,10 @@ function updateTimeChart() {
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false }, datalabels: { display: false } }, 
+            plugins: { 
+                legend: { display: false }, 
+                datalabels: { display: false } 
+            }, 
             scales: { 
                 y: { beginAtZero: true, grid: { display: false } }, 
                 x: { ticks: { maxRotation: 45 }, grid: { display: false } } 
@@ -433,8 +460,19 @@ function updateUBSRespondidasChart() {
             indexAxis: 'y', 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
-            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } 
+            plugins: { 
+                legend: { display: false }, 
+                datalabels: { 
+                    color: 'white', 
+                    font: { weight: 'bold', size: 14 }, 
+                    anchor: 'center', 
+                    align: 'center' 
+                } 
+            }, 
+            scales: { 
+                x: { beginAtZero: true, grid: { display: false } }, 
+                y: { grid: { display: false } } 
+            } 
         }
     });
 }
@@ -455,8 +493,19 @@ function updateUBSPendentesChart() {
             indexAxis: 'y', 
             responsive: true, 
             maintainAspectRatio: false, 
-            plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { weight: 'bold', size: 14 } } }, 
-            scales: { x: { beginAtZero: true, grid: { display: false } }, y: { grid: { display: false } } } 
+            plugins: { 
+                legend: { display: false }, 
+                datalabels: { 
+                    color: 'white', 
+                    font: { weight: 'bold', size: 14 }, 
+                    anchor: 'center', 
+                    align: 'center' 
+                } 
+            }, 
+            scales: { 
+                x: { beginAtZero: true, grid: { display: false } }, 
+                y: { grid: { display: false } } 
+            } 
         }
     });
 }
