@@ -1,6 +1,6 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100% );
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     min-height: 100vh;
 }
 .card {
@@ -76,6 +76,12 @@ body {
     padding: 8px 12px;
     margin-left: 8px;
 }
+.dataTables_length select {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin: 0 4px;
+}
 .filter-section {
     background: white;
     border-radius: 12px;
@@ -87,13 +93,54 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    align-items: center;
+    align-items: flex-end;
 }
-.filter-group select, .filter-group input {
+.filter-item {
+    min-width: 180px;
+}
+.multi-select-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.multi-select-btn {
+    width: 100%;
     padding: 8px 12px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+.multi-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    display: none;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.multi-select-dropdown.show {
+    display: block;
+}
+.multi-select-dropdown label {
+    display: block;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.multi-select-dropdown label:hover {
+    background: #f3f4f6;
+}
+.multi-select-dropdown input {
+    margin-right: 8px;
 }
 @media (max-width: 768px) {
     .chart-container {
@@ -105,6 +152,13 @@ body {
     }
     .charts-grid {
         grid-template-columns: 1fr;
+    }
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filter-item {
+        width: 100%;
     }
 }
 @media print {
