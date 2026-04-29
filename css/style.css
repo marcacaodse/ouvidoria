@@ -97,6 +97,21 @@ body {
 }
 .filter-item {
     min-width: 180px;
+    flex: 1;
+}
+.filter-box {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+.filter-box:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 .multi-select-container {
     position: relative;
