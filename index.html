@@ -74,9 +74,7 @@
                             <span>Todas</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div class="multi-select-dropdown" id="ubsDropdown">
-                            <!-- Opções dinâmicas -->
-                        </div>
+                        <div class="multi-select-dropdown" id="ubsDropdown"></div>
                     </div>
                 </div>
                 <div class="filter-item">
@@ -86,22 +84,20 @@
                             <span>Todos</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
-                        <div class="multi-select-dropdown" id="motivoDropdown">
-                            <!-- Opções dinâmicas -->
-                        </div>
+                        <div class="multi-select-dropdown" id="motivoDropdown"></div>
                     </div>
                 </div>
-                <div>
+                <div class="filter-item">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Data Início:</label>
-                    <input type="date" id="dataInicioFilter" onchange="applyFilters()">
+                    <input type="date" id="dataInicioFilter" class="filter-box" onchange="applyFilters()">
                 </div>
-                <div>
+                <div class="filter-item">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Data Fim:</label>
-                    <input type="date" id="dataFimFilter" onchange="applyFilters()">
+                    <input type="date" id="dataFimFilter" class="filter-box" onchange="applyFilters()">
                 </div>
-                <div>
+                <div class="filter-item">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Ano:</label>
-                    <select id="anoFilter" onchange="applyFilters()">
+                    <select id="anoFilter" class="filter-box" onchange="applyFilters()">
                         <option value="">Todos</option>
                     </select>
                 </div>
