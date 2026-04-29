@@ -7,7 +7,7 @@ let dataTable;
 Chart.register(ChartDataLabels);
 
 // NOVA PLANILHA (conforme solicitado)
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1IiHmkvOeJRIWbR80E74L9wVRPkUdEo1N/export?format=csv&gid=953483319';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/185VQWj2yhEysTQYM5d9GpfzRRZuNppm0dx17qn6EWPo/export?format=csv&gid=953483319';
 
 // Estado dos filtros multi-select
 let filterSelections = {
