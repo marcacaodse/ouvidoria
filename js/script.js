@@ -3,8 +3,11 @@ let filteredData = [];
 let charts = {};
 let dataTable;
 
+// Registrar o plugin de datalabels globalmente
+Chart.register(ChartDataLabels);
+
 // NOVA PLANILHA (conforme solicitado)
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1IiHmkvOeJRIWbR80E74L9wVRPkUdEo1N/export?format=csv&gid=953483319';
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/185VQWj2yhEysTQYM5d9GpfzRRZuNppm0dx17qn6EWPo/export?format=csv&gid=953483319';
 
 // Estado dos filtros multi-select
 let filterSelections = {
@@ -335,7 +338,12 @@ function updateStatusChart() {
         type: 'pie',
         data: {
             labels: ['Respondidas', 'Pendentes'],
-            datasets: [{ data: [respondidas, pendentes], backgroundColor: ['#10b981', '#f59e0b'], borderWidth: 2, borderColor: '#fff' }]
+            datasets: [{ 
+                data: [respondidas, pendentes], 
+                backgroundColor: ['#10b981', '#f59e0b'], 
+                borderWidth: 2, 
+                borderColor: '#fff' 
+            }]
         },
         options: { 
             responsive: true, 
@@ -344,10 +352,11 @@ function updateStatusChart() {
                 legend: { position: 'bottom' }, 
                 datalabels: { 
                     color: 'white', 
-                    font: { weight: 'bold', size: 14 }, 
+                    font: { weight: 'bold', size: 16 },
                     formatter: (value) => value > 0 ? value : '',
                     anchor: 'center',
-                    align: 'center'
+                    align: 'center',
+                    offset: 0
                 } 
             } 
         }
@@ -364,7 +373,13 @@ function updateUBSChart() {
         type: 'bar',
         data: {
             labels: sortedUBS.map(item => item[0]),
-            datasets: [{ label: 'Demandas', data: sortedUBS.map(item => item[1]), backgroundColor: '#2563eb', borderColor: '#1d4ed8', borderWidth: 1 }]
+            datasets: [{ 
+                label: 'Demandas', 
+                data: sortedUBS.map(item => item[1]), 
+                backgroundColor: '#2563eb', 
+                borderColor: '#1d4ed8', 
+                borderWidth: 1 
+            }]
         },
         options: { 
             responsive: true, 
@@ -375,7 +390,8 @@ function updateUBSChart() {
                     color: 'white', 
                     font: { weight: 'bold', size: 14 }, 
                     anchor: 'center', 
-                    align: 'center' 
+                    align: 'center',
+                    formatter: (value) => value > 0 ? value : ''
                 } 
             }, 
             scales: { 
@@ -395,7 +411,13 @@ function updateMotivoChart() {
         type: 'bar',
         data: {
             labels: Object.keys(motivoCount),
-            datasets: [{ label: 'Demandas', data: Object.values(motivoCount), backgroundColor: '#8b5cf6', borderColor: '#6d28d9', borderWidth: 1 }]
+            datasets: [{ 
+                label: 'Demandas', 
+                data: Object.values(motivoCount), 
+                backgroundColor: '#8b5cf6', 
+                borderColor: '#6d28d9', 
+                borderWidth: 1 
+            }]
         },
         options: { 
             responsive: true, 
@@ -406,7 +428,8 @@ function updateMotivoChart() {
                     color: 'white', 
                     font: { weight: 'bold', size: 14 }, 
                     anchor: 'center', 
-                    align: 'center' 
+                    align: 'center',
+                    formatter: (value) => value > 0 ? value : ''
                 } 
             }, 
             scales: { 
@@ -427,14 +450,23 @@ function updateTimeChart() {
         type: 'line',
         data: {
             labels: sortedDates.map(item => item[0]),
-            datasets: [{ label: 'Demandas por Data', data: sortedDates.map(item => item[1]), borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.1)', tension: 0.4, fill: true }]
+            datasets: [{ 
+                label: 'Demandas por Data', 
+                data: sortedDates.map(item => item[1]), 
+                borderColor: '#f59e0b', 
+                backgroundColor: 'rgba(245, 158, 11, 0.1)', 
+                tension: 0.4, 
+                fill: true 
+            }]
         },
         options: { 
             responsive: true, 
             maintainAspectRatio: false, 
             plugins: { 
                 legend: { display: false }, 
-                datalabels: { display: false } 
+                datalabels: { 
+                    display: false 
+                } 
             }, 
             scales: { 
                 y: { beginAtZero: true, grid: { display: false } }, 
@@ -454,7 +486,13 @@ function updateUBSRespondidasChart() {
         type: 'bar',
         data: {
             labels: sortedUBS.map(item => item[0]),
-            datasets: [{ label: 'Respondidas', data: sortedUBS.map(item => item[1]), backgroundColor: '#10b981', borderColor: '#059669', borderWidth: 1 }]
+            datasets: [{ 
+                label: 'Respondidas', 
+                data: sortedUBS.map(item => item[1]), 
+                backgroundColor: '#10b981', 
+                borderColor: '#059669', 
+                borderWidth: 1 
+            }]
         },
         options: { 
             indexAxis: 'y', 
@@ -466,7 +504,8 @@ function updateUBSRespondidasChart() {
                     color: 'white', 
                     font: { weight: 'bold', size: 14 }, 
                     anchor: 'center', 
-                    align: 'center' 
+                    align: 'center',
+                    formatter: (value) => value > 0 ? value : ''
                 } 
             }, 
             scales: { 
@@ -487,7 +526,13 @@ function updateUBSPendentesChart() {
         type: 'bar',
         data: {
             labels: sortedUBS.map(item => item[0]),
-            datasets: [{ label: 'Pendentes', data: sortedUBS.map(item => item[1]), backgroundColor: '#ef4444', borderColor: '#dc2626', borderWidth: 1 }]
+            datasets: [{ 
+                label: 'Pendentes', 
+                data: sortedUBS.map(item => item[1]), 
+                backgroundColor: '#ef4444', 
+                borderColor: '#dc2626', 
+                borderWidth: 1 
+            }]
         },
         options: { 
             indexAxis: 'y', 
@@ -499,7 +544,8 @@ function updateUBSPendentesChart() {
                     color: 'white', 
                     font: { weight: 'bold', size: 14 }, 
                     anchor: 'center', 
-                    align: 'center' 
+                    align: 'center',
+                    formatter: (value) => value > 0 ? value : ''
                 } 
             }, 
             scales: { 
